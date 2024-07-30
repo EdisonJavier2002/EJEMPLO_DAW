@@ -1,0 +1,70 @@
+{% extends "./plantilla.html" %}
+{% block body %}
+<div class="container-fluid" style="padding-left: 400px; padding-right: 400px;">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{% url 'guardarGenero' %}" enctype="multipart/form-data" id="frm_nuevo_genero" method="post">
+                {% csrf_token %}
+                <label for=""><b>Nombre:</b></label>
+                <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ingrese el nombre del genero">
+                <br>
+                <label for=""><b>Descripción:</b></label>
+                <textarea name="descripcion" class="form-control" id="descripcion" rows="3" placeholder="Ingrese la descripción"></textarea>
+                <br>
+                <b for=""><br>Fotografía:</b></label>
+                <input type="file" name="foto" id="foto" accept="image/*"s
+                required class="form-control">
+
+                <br><br>
+                <button type="submit" class="btn btn-primary">
+                    Guardar
+                </button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'listadoGeneros' %}">Cancelar</a>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+<br><br><br><br><br>
+<!--Para que funcione java scrip se utiliza script, maneras de acceder al DOM-->
+<script>
+    $("#frm_nuevo_genero").validate({
+        rules:{
+            nombre:{
+                required:true,
+                minlength: 3,
+                maxlength: 10
+            },
+            descripcion:{
+                required:true
+            },
+            foto:{
+                required:true
+            }
+        },
+        messages:{
+            nombre:{
+                required:"Por favor ingrese el nombre",
+                minlength:"El nombre debe tener al menos 3 letras minimo",
+                maxlength:"Máximo 10 caracteres"
+            },
+            descripcion:{
+                required:"La descripción es obligatoria"
+            },
+            foto:{
+                required:"Por favor seleccione la foto"
+            }
+        }
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $("#foto").fileinput({                       
+            showBrowse: true,
+            browseOnZoneClick: true            
+        });
+    });
+</script>
+{% endblock %}

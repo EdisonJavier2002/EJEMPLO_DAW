@@ -1,0 +1,52 @@
+<br>
+<div style="padding-left: 80px; padding-right: 80px;">
+    <table class="table table-bordered table-striped table-hover" id="tbl-peliculas">
+        <thead>
+            <tr>
+                <th class="text-center">ID</th>
+                <th class="text-center">TÍTULO</th>
+                <th class="text-center">DURACIÓN</th>
+                <th class="text-center">SINOPSIS</th>
+                <th class="text-center">GÉNERO</th>
+                <th class="text-center">DIRECTOR</th>
+                <th class="text-center">PORTADA</th>
+                <th class="text-center">ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pelicula in peliculas %}
+            <tr>
+                <td class="text-center">{{ pelicula.id }}</td>
+                <td class="text-center">{{ pelicula.titulo }}</td>
+                <td class="text-center">{{ pelicula.duracion }}</td>
+                <td class="text-center">{{ pelicula.sinopsis }}</td>
+                <td class="text-center">{{ pelicula.genero.nombre }}</td>
+                <td class="text-center">{{ pelicula.director.nombre }} {{ pelicula.director.apellido }}</td>
+                <td class="text-center">
+                    {% if pelicula.portada %}
+                    <img src="{{ pelicula.portada.url }}" alt="Portada" width="50" height="50">
+                    {% else %}
+                    No disponible
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <a href="" class="btn btn-outline-warning btn-circle" title="Editar Película">
+                        <i class="fas fa-pencil"></i>
+                    </a>
+                    <a href="" onclick="return confirm('¿Estás seguro?');" class="btn btn-outline-danger btn-circle">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+    var table = new DataTable('#tbl-peliculas');
+</script>
+<style>
+    .btn-circle {
+        border-radius: 100px !important;
+    }
+</style>

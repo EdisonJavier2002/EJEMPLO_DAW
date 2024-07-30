@@ -1,0 +1,136 @@
+{% extends "./plantilla.html" %}
+{% load static %}
+{% block body %}
+
+<!-- Button trigger modal -->
+<div class="container">
+    <h1 class="text-center">Gestión de Directores</h1>
+    <div class="row"> 
+        <div class="col-md-12 text-end">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <i class="fas fa-plus"></i>
+                <b>Agregar Director</b>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo Director</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" id="frm_nuevo_director" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for=""><b>DNI:</b></label>
+                    <input type="text" name="dni" class="form-control" id="dni"
+                        placeholder="Ingrese el DNI del director">
+                    <br>
+                    <label for=""><b>Apellido:</b></label>
+                    <input type="text" name="apellido" class="form-control" id="apellido"
+                        placeholder="Ingrese el apellido del director">
+                    <br>
+                    <label for=""><b>Nombre:</b></label>
+                    <input type="text" name="nombre" class="form-control" id="nombre"
+                        placeholder="Ingrese el nombre del director">
+                    <br>
+                    <label for=""><b>Foto:</b></label>
+                    <input type="file" name="foto" class="form-control" id="foto">
+                    <br>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary"><li class="fas fa-save"></li> &nbsp;Guardar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><li class="fas fa-times"></li>&nbsp; Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br><br>
+<div id="contenedor-directores"></div>
+<br><br><br>
+<script>
+    $("#frm_nuevo_director").validate({
+        rules:{
+            dni:{
+                required:true,
+                minlength: 3,
+                maxlength: 15
+            },
+            apellido:{
+                required:true,
+                minlength: 3,
+                maxlength: 50
+            },
+            nombre:{
+                required:true,
+                minlength: 3,
+                maxlength: 50
+            }
+        },
+        messages:{
+            dni:{
+                required:"Por favor ingrese el DNI",
+                minlength:"El DNI debe tener al menos 3 caracteres",
+                maxlength:"Máximo 15 caracteres"
+            },
+            apellido:{
+                required:"Por favor ingrese el apellido",
+                minlength:"El apellido debe tener al menos 3 caracteres",
+                maxlength:"Máximo 50 caracteres"
+            },
+            nombre:{
+                required:"Por favor ingrese el nombre",
+                minlength:"El nombre debe tener al menos 3 caracteres",
+                maxlength:"Máximo 50 caracteres"
+            }
+        },
+        submitHandler:function(formulario){
+            $.ajax({
+                url: "{% url 'guardarDirector' %}",
+                type: 'post',
+                data: new FormData(formulario),
+                processData: false,
+                contentType: false,
+                success: function(data){
+                    if(data.estado === true){
+                        Swal.fire({
+                            title:'Confirmación',
+                            text: data.mensaje,
+                            icon: 'success'
+                        });
+                        $("#exampleModal").modal('hide');
+                        $(formulario)[0].reset();
+                        cargarDirectores();
+                    }else{
+                        Swal.fire({
+                            title:'ERROR',
+                            text: data.mensaje,
+                            icon: 'error'
+                        });
+                    }
+                },
+                error: function(error){
+                    console.log(error);
+                    Swal.fire({
+                        title:'ERROR',
+                        text: "Ocurrió un error al procesar la solicitud",
+                        icon: 'error'
+                    });
+                }
+            });
+        }
+    });
+
+    function cargarDirectores(){
+        $("#contenedor-directores").load('{% url "listadoDirectores" %}');
+    }
+    cargarDirectores();
+</script>
+
+{% endblock %}

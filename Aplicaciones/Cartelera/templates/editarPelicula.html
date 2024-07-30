@@ -1,0 +1,62 @@
+{% extends "./plantilla.html" %}
+{% block body %}
+<h1>EDITAR PELÍCULA</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{% url 'procesarActualizacionPelicula' %}" enctype="multipart/form-data" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ peliculaEditar.id }}">
+
+                <label for="titulo"><b>Título:</b></label>
+                <input type="text" name="titulo" class="form-control"
+                       value="{{ peliculaEditar.titulo }}"
+                       id="titulo" placeholder="Ingrese el título de la película">
+
+                <label for="duracion"><b>Duración:</b></label>
+                <input type="time" name="duracion" class="form-control"
+                       value="{{ peliculaEditar.duracion }}"
+                       id="duracion" placeholder="Ingrese la duración de la película">
+
+                <label for="sinopsis"><b>Sinopsis:</b></label>
+                <textarea name="sinopsis" id="sinopsis"
+                          class="form-control" rows="3"
+                          placeholder="Ingrese la sinopsis">{{ peliculaEditar.sinopsis }}</textarea>
+
+                <label for="genero"><b>Género:</b></label>
+                <select name="genero" class="form-control" id="genero">
+                    {% for genero in generos %}
+                    <option value="{{ genero.id }}" {% if genero.id == peliculaEditar.genero.id %}selected{% endif %}>
+                        {{ genero.nombre }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <label for="director"><b>Director:</b></label>
+                <select name="director" class="form-control" id="director">
+                    {% for director in directores %}
+                    <option value="{{ director.id }}" {% if director.id == peliculaEditar.director.id %}selected{% endif %}>
+                        {{ director.nombre }} {{ director.apellido }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <br>
+                <label for="portada"><b>Portada:</b></label>
+                {% if peliculaEditar.portada %}
+                    <div>
+                        <img src="{{ peliculaEditar.portada.url }}" alt="Portada actual" height="100px" width="100px">
+                        <a download href="{{ peliculaEditar.portada.url }}">Descargar</a>
+                    </div>
+                {% endif %}
+                <input type="file" name="portada" id="portada" accept="image/*" class="form-control">
+                <br>
+                <button  type="submit" class="btn btn-warning">
+                    Actualizar</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'listadoPeliculas' %}">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+<br>
+{% endblock %}
